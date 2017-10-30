@@ -1,2 +1,1 @@
-# grading-nodejs
-Docker: Node.js grading environment
+Grading environment with specific Node.js in path.
