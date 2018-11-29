@@ -1,12 +1,11 @@
-FROM apluslms/grading-base:debian-stretch-1.1
+ARG BASE_TAG=latest
+FROM apluslms/grading-base:$BASE_TAG
 
-RUN apt-get update -qqy && apt-get install -qqy --no-install-recommends \
-    apt-transport-https \
-    lsb-release \
-    gnupg \
-  && curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
-  && echo 'deb https://deb.nodesource.com/node_6.x stretch main' > /etc/apt/sources.list.d/nodesource.list \
-  && echo 'deb-src https://deb.nodesource.com/node_6.x stretch main' >> /etc/apt/sources.list.d/nodesource.list \
-  && apt-get update -qqy && apt-get install -qqy --no-install-recommends \
-    nodejs \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+ARG NODE_VERSION=11
+
+RUN apt_install apt-transport-https \
+ && curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - >/dev/null \
+ && codename=$(cat /etc/os-release|grep '^VERSION='|cut '-d(' -f2|cut '-d)' -f1) \
+ && echo "deb https://deb.nodesource.com/node_$NODE_VERSION.x $codename main" > /etc/apt/sources.list.d/nodesource.list \
+ && echo "deb-src https://deb.nodesource.com/node_$NODE_VERSION.x $codename main" >> /etc/apt/sources.list.d/nodesource.list \
+ && apt_install nodejs
